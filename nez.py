@@ -181,17 +181,52 @@ class FreenetHunter:
             pass
 
         # --- PHASE 2: GENERATING 10,000+ PREFIX MATRIX ---
-        prefixes = ["m", "api", "v", "zero", "free", "portal", "static", "wap", "cdn", "dev", "login", "care"]
-        chars = 'abcdefghijklmnopqrstuvwxyz'
-        for c in chars:
-            for i in range(1, 200): 
-                prefixes.append(f"{c}{i}")
-        for c1 in chars:
-            for c2 in chars:
-                prefixes.append(f"{c1}{c2}")
-        for i in range(100, 1000):
-            prefixes.append(f"node{i}")
-            prefixes.append(f"srv{i}")
+        prefixes = [
+            "www", "m", "api", "v", "zero", "free", "portal", "static", "wap", "cdn", "dev", "login", "care",
+            "ns1", "ns2", "ns3", "ns4", "ns5", "mail", "autodiscover", "vps", "apps", "shop", "blog", "status",
+            "cloud", "admin", "secure", "billing", "support", "vpn", "remote", "git", "staging", "beta", "demo",
+            "corp", "internal", "intranet", "prod", "sms", "gw", "router", "fw", "db", "sql", "monitor", "iot",
+            "proxy", "kb", "help", "legal", "media", "assets", "images", "download", "updates", "ssh", "ftp",
+            "smtp", "pop", "imap", "mx", "storage", "files", "backup", "sync", "cdn1", "cdn2", "api1", "api2",
+            "test1", "test2", "lab", "office", "hr", "payroll", "career", "jobs", "press", "news", "events",
+            "partners", "affiliates", "tracking", "analytics", "ads", "marketing", "campaign", "promo",
+            "docker", "jenkins", "gitlab", "jira", "confluence", "slack", "chat", "meeting", "zoom", "video",
+            "auth", "sso", "identity", "account", "member", "profile", "user", "guest", "payment", "checkout",
+            "cart", "order", "invoice", "ticket", "service", "client", "customer", "staff", "manager", "console"
+        ]
+        
+        # 2. Infrastructure Clusters (srv1-200, node1-200, etc.) (~700)
+        # Expanded range to 100-150 each to hit the 1k goal
+        infra_map = {
+            "srv": 150, "node": 150, "web": 100, "app": 100, 
+            "lb": 50, "db": 50, "host": 50, "server": 50
+        }
+        for prefix_type, count in infra_map.items():
+            for i in range(1, count + 1):
+                prefixes.append(f"{prefix_type}{i}")
+
+        # 3. Environment & Gateway Combinations (~200)
+        envs = ["dev", "test", "stg", "qa", "prod"]
+        services = ["api", "web", "gw", "link", "sys", "hub", "data", "net", "cloud", "core"]
+        for e in envs:
+            for s in services:
+                prefixes.append(f"{e}-{s}")
+                prefixes.append(f"{s}-{e}")
+                prefixes.append(f"{e}{s}") # e.g. devapi
+
+        # 4. Telco & PH-Specific Deep Scan (~100)
+        ph_telco = [
+            "globetelecom", "smart", "pldt", "stg", "payment", "load", "promos", "balance", 
+            "pasaload", "gigalife", "dashboard", "points", "rewards", "unli", "surf", "ext",
+            "ota", "provision", "hss", "mme", "pgw", "sgw", "ggsn", "sgsn", "hlr", "prepaid", 
+            "postpaid", "enterprise", "radius", "billing-gw", "topup", "reload", "ussd", "vas",
+            "volte", "vowifi", "ent", "home", "wifi", "hotspot", "speedtest", "pldthome",
+            "my", "online", "care", "digi", "pay", "money", "wallet", "cash", "business"
+        ]
+        prefixes.extend(ph_telco)
+        
+        # Final cleanup to ensure everything is unique
+        prefixes = list(set(prefixes))
 
         # --- PHASE 3: HIGH-SPEED CONCURRENT PROBING ---
         v1_center(f"{Y}PROBING {len(prefixes)} UNIQUE PREFIXES...{NC}")
