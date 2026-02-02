@@ -89,7 +89,7 @@ def v1_banner():
     for line in logo.split('\n'): print(line.center(width))
     print(f"{D}—{NC}" * width)
     print(f"{Y} AUTHOR  : {W}REYMARK INDOC{NC} | {Y}CONTACT: {W}premyumchk@ccmail.uk{NC}")
-    print(f"{C} STATUS  : {W}CORE-ULTRA MONOLITH (500+ LINES){NC}")
+    print(f"{C} STATUS  : {W}STABLE{NC}")
     print(f"{D}—{NC}" * width)
 
 def v1_center(text):
